@@ -31,14 +31,15 @@
 
         $scope.selectedCountries = [];
 
-        $scope.baseUrl = "http://api.worldbank.org/countries/all/indicators/";
-        $scope.sourceUrl = "http://api.worldbank.org/source?";
-        $scope.countryUrl = "http://api.worldbank.org/country?per_page=264&";
-        $scope.regionUrl = "http://api.worldbank.org/region?";
-        $scope.topicUrl = "http://api.worldbank.org/topic?";
-        $scope.incomeLevelUrl = "http://api.worldbank.org/incomelevel?";
-        $scope.lendingTypeUrl = "http://api.worldbank.org/lendingtype?";
+        $scope.baseUrl = "//api.worldbank.org/countries/all/indicators/";
+        $scope.sourceUrl = "//api.worldbank.org/source?";
+        $scope.countryUrl = "//api.worldbank.org/country?per_page=264&";
+        $scope.regionUrl = "//api.worldbank.org/region?";
+        $scope.topicUrl = "//api.worldbank.org/topic?";
+        $scope.incomeLevelUrl = "//api.worldbank.org/incomelevel?";
+        $scope.lendingTypeUrl = "//api.worldbank.org/lendingtype?";
         $scope.prefix = "format=jsonP&prefix=JSON_CALLBACK&callback=JSON_CALLBACK";
+        
 
         $scope.arrayChanged = function (id, val) {
             var a = $scope.selectedCountries.indexOf(id);
