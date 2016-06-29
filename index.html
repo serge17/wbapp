@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" ng-app="application">
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdn.rawgit.com/novus/nvd3/v1.8.1/build/nv.d3.min.js" charset="utf-8"></script>
+    <script src="http://code.highcharts.com/maps/highmaps.js"></script>
+    <script src="http://code.highcharts.com/maps/modules/exporting.js"></script>
+    <script src="http://code.highcharts.com/mapdata/custom/world.js"></script>
+    <script src="app.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cloud.github.com/downloads/lafeber/world-flags-sprite/flags32.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/novus/nvd3/v1.8.1/build/nv.d3.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body ng-controller="applicationCtrl">
+
+    <div id="main">
+        <span style="font-size:30px;cursor:pointer" onclick="openNav()">☰ Options</span>
+        <button class="btn btn-primary" type="button" ng-click="draw(1); showTable=false; showMap=false; showGraph=true;">Line Chart</button>
+        <button class="btn btn-primary" type="button" ng-click="draw(3); showTable=false; showMap=false; showGraph=true;">Bar Chart</button>
+        <button class="btn btn-primary" type="button" ng-click="table(); showTable=true; showGraph=false; showMap=false;">Table</button>
+        <button class="btn btn-primary" type="button" ng-click="showTable=false; showGraph=false; showMap=true;">Map</button>
+
+        <h3>{{selectedIndicator}}</h3>
+        <h5>{{selectedIndicatorText}}</h5>
+        <h3>{{message}}</h3>
+
+        <div id="chart" class="container" ng-show="showGraph">
+            <h4>{{messageChart}}</h4>
+            <svg></svg>
+        </div>
+        <div ng-show="showMap" id="map" class="container">
+            <h4>Data for year: {{year}}</h4>
+            <h5>Select year</h5>
+            <input type="range" min="{{fromDate}}" max="{{toDate}}" value="{{year}}" step="1" ng-model="year" ng-mouseup="refreshMap();" />
+            <div id="container">
+
+            </div>
+        </div>
+
+
+        <div class="container" ng-show="showTable" id="tableContainer">
+            <h3 ng-show="dataForTable.length===0">No data for selected countries.</h3>
+            <table class="table table-striped" ng-show="dataForTable.length>0">
+                <thead>
+                    <tr>
+                        <th>Country</th>
+                        <th ng-repeat="val in dataForMap">{{val.key}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="dat in dataForTable">
+                        <td>{{dat.key}}</td>
+                        <td ng-repeat="val in dat.values">{{val[1]}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <!--        country selector block of sidenav-->
+        <div class="menuHead">
+            <h4 class="dropdn"><a href="" ng-click="countrySelector = !countrySelector; sourceSelector=false; indicatorSelector=false;timeframeSelector=false;"><span class="caret"></span> Countries <span class="label label-default">{{onlyCountry.length}}</span></a></h4>
+            <div class="dropdown">
+                <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-filter"></span><span class="caret"></span></a>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <li ng-class="{active:showRegions}"><a href="" ng-click="showRegions=true;showAggregates=false;showIncomeLvls=false;">Countries by Regions</a></li>
+                    <li ng-class="{active: !showIncomeLvls && !showRegions && !showAggregates}"><a href="" ng-click="showRegions=false;showIncomeLvls=false;showAggregates=false;">All Countries</a></li>
+                    <li ng-class="{active:showIncomeLvls}"><a href="" ng-click="showRegions=false;showAggregates=false; showIncomeLvls=true">Countries by Income Levels</a></li>
+                    <li ng-class="{active:showAggregates}"><a href="" ng-click="showRegions=false;showIncomeLvls=false; showAggregates = true">Aggregates</a></li>
+                </ul>
+            </div>
+            <input type="text" ng-show="countrySelector" placeholder="Search countries" class="form-control inp" ng-model="searchCountries">
+        </div>
+
+        <div ng-show="countrySelector" class="inputSelector">
+            <div ng-repeat="countr in incomeLevel" ng-show="showIncomeLvls">
+                <a href="" ng-click="showSubMenu= !showSubMenu"><span class="caret"></span></a>
+                <div class="checkbox" style="display:inline-block;">
+                    <label>
+                        <input type="checkbox" ng-change="arrayChanged(countr.value, reg);" ng-false-value="false" ng-true-value="true" ng-model="reg">{{countr.value}}</label>
+                </div>
+                <div class="checkbox subMenu f32" ng-show="showSubMenu" ng-repeat="count in onlyCountry | filter:countr.value | filter:searchCountries">
+                    <!--                   count in countr.values, no filter-->
+                    <a class="flag {{count.iso2Code.toLowerCase()}}"></a>
+                    <label>
+                        <input type="checkbox" ng-change="arrayChanged(count.name, regg);" ng-false-value="false" ng-true-value="true" ng-model="regg">{{count.name}}</label>
+                </div>
+            </div>
+
+            <div ng-repeat="countr in region" ng-show="showRegions" style="width:400px;">
+                <a href="" ng-click="showSubMenu= !showSubMenu"><span class="caret"></span>    </a>
+                <div class="checkbox" style="display:inline-block;">
+                    <label>
+                        <input type="checkbox" ng-change="arrayChanged(countr.value, reg);" ng-false-value="false" ng-true-value="true" ng-model="reg">{{countr.value}}</label>
+                </div>
+                <div class="checkbox subMenu f32" ng-show="showSubMenu" ng-repeat="count in onlyCountry | filter:countr.value | filter:searchCountries">
+                    <!--                    count in countr.values, no filter-->
+                    <a class="flag {{count.iso2Code.toLowerCase()}}"></a>
+                    <label>
+                        <input type="checkbox" ng-change="arrayChanged(count.name, regg)" ng-false-value="false" ng-true-value="true" ng-model="regg">{{count.name}}</label>
+                </div>
+            </div>
+
+            <div ng-show="!showRegions && !showIncomeLvls && !showAggregates">
+                <div class="checkbox f32" ng-repeat="countr in onlyCountry | filter:searchCountries">
+                    <a class="flag {{countr.iso2Code.toLowerCase()}}"></a>
+                    <label>
+                        <input type="checkbox" value="" ng-model="reg" ng-false-value="false" ng-true-value="true" ng-change="arrayChanged(countr.name, reg);">{{countr.name}}</label>
+                </div>
+            </div>
+
+            <div ng-show="showAggregates" style="width:400px;">
+                <div class="checkbox" ng-repeat="countr in aggregate | filter:searchCountries">
+                    <label>
+                        <input type="checkbox" value="" ng-model="reg" ng-false-value="false" ng-true-value="true" ng-change="arrayChanged(countr.name, reg);">{{countr.name}}</label>
+                </div>
+
+            </div>
+        </div>
+
+        <!--        topic/database selector block of sidenav-->
+        <div class="menuHead">
+
+            <h4 class="dropdn"><a href="" ng-click="sourceSelector= !sourceSelector; countrySelector = false; indicatorSelector=false; timeframeSelector=false;"><span class="caret"></span> Topics <span class="label label-default">{{topic.length}}</span> /Databases <span class="label label-default">{{source.length}}</span></a></h4>
+            <div class="dropdown">
+                <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-filter"></span><span class="caret"></span></a>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <li ng-class="{active:showTopics}"><a href="" ng-click="showTopics=true;">Topics</a></li>
+                    <li ng-class="{active:!showTopics}"><a href="" ng-click="showTopics=false;">Databases</a></li>
+                </ul>
+            </div>
+            <input type="text" ng-show="sourceSelector" placeholder="Search sources and topics" class="form-control inp" ng-model="searchSources">
+        </div>
+
+        <div ng-show="sourceSelector" class="inputSelector">
+            <form role="form" ng-show="showTopics">
+                <h5>Topics:</h5>
+                <div class="radio" ng-repeat="topi in topic | filter:searchSources">
+                    <label>
+                        <input type="radio" name="topic" ng-click="getIndicators(topi.id, 0)">{{topi.value}}</label>
+                </div>
+            </form>
+            <form role="form" ng-show="!showTopics">
+                <h5>Databases:</h5>
+                <div class="radio" ng-repeat="sourc in source | filter:searchSources">
+                    <label>
+                        <input type="radio" name="source" ng-click="getIndicators(sourc.id, 1)">{{sourc.name}}</label>
+                </div>
+            </form>
+        </div>
+        <!--        indicator selector block of sidenav-->
+        <div class="menuHead">
+            <h4 class="dropdn"><a href="" ng-click="indicatorSelector= !indicatorSelector; countrySelector=false;sourceSelector=false;timeframeSelector=false;"><span class="caret"></span> Indicators <span class="label label-default">{{indicator.length}}</span></a></h4>
+            <input type="text" ng-show="indicatorSelector" placeholder="Search indicators" class="form-control inp" ng-model="searchIndicators">
+
+        </div>
+        <div class="inputSelector" ng-show="indicatorSelector">
+            <form role="form">
+                <h5>{{messageIndicator}}</h5>
+                <div class="radio" ng-repeat="indicato in indicator | filter: searchIndicators">
+                    <label>
+                        <input type="radio" name="indicator" value="{{indicato.id}}" ng-click="selectIndicatorId(indicato.id);">{{indicato.name}}</label>
+                </div>
+            </form>
+        </div>
+        <!--        timeframe selector block of sidenav-->
+        <div class="menuHead">
+            <h4><a href="" ng-click="timeframeSelector = !timeframeSelector; indicatorSelector=false;countrySelector=false;sourceSelector=false;"><span class="caret"></span> Timeframe</a></h4>
+        </div>
+        <div class="inputSelector" ng-show="timeframeSelector">
+            <h5>Select from-date</h5>
+            <select class="form-control" ng-model="fromDate">
+                <option ng-repeat="n in range(1960,2015)">{{n}}</option>
+            </select>
+            <h5>Select to-date</h5>
+            <select class="form-control" ng-model="toDate">
+                <option ng-repeat="n in range(1960,2015)">{{n}}</option>
+            </select>
+
+        </div>
+
+        <button id="refreshDataBtn" class="btn btn-default" type="button" ng-click="getData(fromDate,toDate);">Load/Refresh Data</button>
+
+
+    </div>
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "300px";
+            document.getElementById("main").style.marginLeft = "300px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+        openNav();
+    </script>
+
+</body>
+
+</html>

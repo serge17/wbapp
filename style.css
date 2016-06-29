@@ -1,0 +1,115 @@
+svg{
+    height: 400px;
+    width:match-parent;
+}
+.dropdown-menu{
+    max-height: 400px;
+    overflow: hidden;
+    overflow-y: auto;
+}
+.dropdown{
+    float:right;
+}
+
+#tableContainer{
+    max-height:500px;
+    overflow:auto;
+}
+.container{
+    width:90%;
+}
+
+body {
+    font-family: "Lato", sans-serif;
+}
+.dropdn{
+    display:inline;
+}
+.inp{
+    margin-top: 10px;
+}
+
+.sidenav {
+    height: 100%;
+    width:0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: transparent;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    border-right-width: 1px;
+    border-right-style:solid;
+    border-right-color:#e8e8e8;
+}
+
+.closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px !important;
+    margin-left: 50px;
+}
+
+#main {
+    transition: margin-left .5s;
+    padding: 16px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+}
+
+#container {
+    height: 500px; 
+    width: 100%; 
+    margin: 0 auto; 
+}
+
+.highcharts-tooltip>span {
+    padding: 10px;
+    white-space: normal !important;
+    width: 200px;
+}
+
+.loading {
+    margin-top: 10em;
+    text-align: center;
+    color: gray;
+}
+
+.f32 .flag {
+    vertical-align: middle !important;
+}
+#refreshDataBtn{
+    margin-top:5px;
+    margin-left:50px;
+}
+
+.inputSelector{
+    width:300px;
+    padding-left:20px;
+    max-height: 200px;
+    max-width:400px;
+    overflow-x: hidden;
+}
+
+.subMenu{
+    margin-left:20px;
+}
+.checkbox{
+    margin-bottom: 5px;
+    margin-top: 0px;
+}
+
+.menuHead{
+    margin-top: 20px;
+    padding-left: 10px;
+    padding-right: 20px;
+    width: 300px;
+}
+a{
+    text-decoration: none !important;
+}
