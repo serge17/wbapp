@@ -15,6 +15,7 @@
         $scope.incomeLevel = [];
         $scope.aggregate = [];
 
+
         $scope.dec = 0;
         $scope.selectedIndicator = null;
         $scope.selectedIndicatorId = null;
@@ -39,7 +40,77 @@
         $scope.incomeLevelUrl = "http://api.worldbank.org/incomelevel?";
         $scope.lendingTypeUrl = "http://api.worldbank.org/lendingtype?";
         $scope.prefix = "format=jsonP&prefix=JSON_CALLBACK&callback=JSON_CALLBACK";
-        
+
+        $scope.testData = [];
+        $scope.testMin = 2016;
+        $scope.testMax = 1960;
+
+        $scope.testPost = function (testCountryId, testYear, testValue) {
+            var postData = {
+                countryId: testCountryId,
+                year: testYear,
+                value: testValue
+            };
+            $http({
+                url: 'http://1-dot-wbapp-1359.appspot.com/wbapp',
+                method: "POST",
+                data: postData,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).success(function (data, status, headers, config) {
+                $scope.testGet();
+
+            }).error(function (data, status, headers, config) {
+                $scope.status = status;
+            });
+
+        }
+
+        $scope.testGet = function () {
+            $http({
+                url: 'http://1-dot-wbapp-1359.appspot.com/wbapp/data',
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).success(function (data, status, headers, config) {
+                $scope.testData = data;
+                
+                var result = data;
+                for (var i = result[1].length - 1; i >= 0; i--) {
+                    var ob = contains($scope.testData, result[1][i].country.value);
+                    if (result[1][i].date<$scope.testMin){
+                        $scope.testMin = result[1][i].date;
+                    }
+                    if (result[1][i].date>$scope.testMax){
+                        $scope.testMax = result[1][i].date;
+                    }
+                    
+                    if (ob === null) {
+                        var ar = [];
+                        var arr = [];
+                        arr.push(result[1][i].date);
+                        arr.push(result[1][i].value);
+                        ar.push(arr);
+                        $scope.testData.push({
+                            key: result[1][i].country.value,
+                            values: ar
+                        });
+
+                    } else {
+                        var arr = [];
+                        arr.push(result[1][i].date);
+                        arr.push(result[1][i].value);
+                        ob.values.push(arr);
+                    }
+                }
+
+            }).error(function (data, status, headers, config) {
+                $scope.status = status;
+            });
+
+        }
 
         $scope.arrayChanged = function (id, val) {
             var a = $scope.selectedCountries.indexOf(id);
@@ -155,6 +226,7 @@
 
         $scope.getCountries = function () {
             var url = $scope.countryUrl + $scope.prefix;
+
             $http.jsonp(url)
                 .success(function (result) {
                     for (i = 0; i < result[1].length; i++) {
@@ -254,6 +326,7 @@
             var url = $scope.baseUrl + $scope.selectedIndicatorId + "?per_page=20000&date=" + fromDate + ":" + toDate + "&" + $scope.prefix;
             $http.jsonp(url)
                 .success(function (result) {
+
                     if (result[1] == null) {
                         $scope.message = "There is no data yet for this indicator.";
                         return;
@@ -341,9 +414,11 @@
                     console.log(result);
                 });
         };
+        
         $scope.getCountries();
         $scope.getSources();
         $scope.getTopics();
+        $scope.testGet();
     }
 
     function findIndicator(ar, indicatorId) {

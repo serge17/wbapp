@@ -24,14 +24,41 @@
 
     <div id="main">
         <span style="font-size:30px;cursor:pointer" onclick="openNav()">☰ Options</span>
-        <button class="btn btn-primary" type="button" ng-click="draw(1); showTable=false; showMap=false; showGraph=true;">Line Chart</button>
-        <button class="btn btn-primary" type="button" ng-click="draw(3); showTable=false; showMap=false; showGraph=true;">Bar Chart</button>
-        <button class="btn btn-primary" type="button" ng-click="table(); showTable=true; showGraph=false; showMap=false;">Table</button>
-        <button class="btn btn-primary" type="button" ng-click="showTable=false; showGraph=false; showMap=true;">Map</button>
+        <button class="btn btn-primary" type="button" ng-click="draw(1); showTest=false; showTable=false; showMap=false; showGraph=true;">Line Chart</button>
+        <button class="btn btn-primary" type="button" ng-click="draw(3); showTest=false; showTable=false; showMap=false; showGraph=true;">Bar Chart</button>
+        <button class="btn btn-primary" type="button" ng-click="table(); showTest=false; showTable=true; showGraph=false; showMap=false;">Table</button>
+        <button class="btn btn-primary" type="button" ng-click="showTest=false;showTable=false; showGraph=false; showMap=true;">Map</button>
+        <button class="btn btn-primary" type="button" ng-click="showTest=true;  showTable=false; showGraph=false; showMap=false;">Test</button>
 
         <h3>{{selectedIndicator}}</h3>
         <h5>{{selectedIndicatorText}}</h5>
         <h3>{{message}}</h3>
+
+        <div class="container" id="test" ng-show="showTest">
+            <h4>Change or add data to test dataset: </h4> Country iso2code
+            <input type="text" ng-model="testCountryId"> Year
+            <input type="text" ng-model="testYear"> Value
+            <input type="text" ng-model="testValue">
+            <button class="btn btn-primary" type="button" ng-click="testPost(testCountryId, testYear, testValue);">Send post request</button>
+
+            <div class="container tableContainer">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Country</th>
+                            <th ng-repeat="n in range(1960,2015)">{{n}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="dat in testData">
+                            <td>{{dat.key}}</td>
+                            <td ng-repeat="val in dat.values">{{val[1]}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
 
         <div id="chart" class="container" ng-show="showGraph">
             <h4>{{messageChart}}</h4>
@@ -47,7 +74,7 @@
         </div>
 
 
-        <div class="container" ng-show="showTable" id="tableContainer">
+        <div class="container tableContainer" ng-show="showTable">
             <h3 ng-show="dataForTable.length===0">No data for selected countries.</h3>
             <table class="table table-striped" ng-show="dataForTable.length>0">
                 <thead>
@@ -191,7 +218,6 @@
         </div>
 
         <button id="refreshDataBtn" class="btn btn-default" type="button" ng-click="getData(fromDate,toDate);">Load/Refresh Data</button>
-
 
     </div>
     <script>

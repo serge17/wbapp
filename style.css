@@ -11,7 +11,7 @@ svg{
     float:right;
 }
 
-#tableContainer{
+.tableContainer{
     max-height:500px;
     overflow:auto;
 }
