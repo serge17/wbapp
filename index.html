@@ -24,10 +24,10 @@
 
     <div id="main">
         <span style="font-size:30px;cursor:pointer" onclick="openNav()">☰ Options</span>
-        <button class="btn btn-primary" type="button" ng-click="draw(1); showTable=false; showMap=false; showGraph=true;">Line Chart</button>
-        <button class="btn btn-primary" type="button" ng-click="draw(3); showTable=false; showMap=false; showGraph=true;">Bar Chart</button>
-        <button class="btn btn-primary" type="button" ng-click="table(); showTable=true; showGraph=false; showMap=false;">Table</button>
-        <button class="btn btn-primary" type="button" ng-click="showTable=false; showGraph=false; showMap=true;">Map</button>
+        <button class="btn btn-primary" type="button" ng-disabled="data.length==0" ng-click="draw(1); showTable=false; showMap=false; showGraph=true;">Line Chart</button>
+        <button class="btn btn-primary" type="button" ng-disabled="data.length==0" ng-click="draw(3); showTable=false; showMap=false; showGraph=true;">Bar Chart</button>
+        <button class="btn btn-primary" type="button" ng-disabled="data.length==0" ng-click="table(); showTable=true; showGraph=false; showMap=false;">Table</button>
+        <button class="btn btn-primary" type="button" ng-disabled="data.length==0" ng-click="showTable=false; showGraph=false; showMap=true;">Map</button>
 
         <h3>{{selectedIndicator}}</h3>
         <h5>{{selectedIndicatorText}}</h5>
