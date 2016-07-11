@@ -34,7 +34,7 @@
 
         $scope.baseUrl = "http://api.worldbank.org/countries/all/indicators/";
         $scope.sourceUrl = "http://api.worldbank.org/source?";
-        $scope.countryUrl = "http://api.worldbank.org/country?per_page=264&";
+        $scope.countryUrl = "http://api.worldbank.org/country?per_page=300&";
         $scope.regionUrl = "http://api.worldbank.org/region?";
         $scope.topicUrl = "http://api.worldbank.org/topic?";
         $scope.incomeLevelUrl = "http://api.worldbank.org/incomelevel?";
@@ -155,7 +155,6 @@
 
         $scope.getCountries = function () {
             var url = $scope.countryUrl + $scope.prefix;
-
             $http.jsonp(url)
                 .success(function (result) {
                     for (i = 0; i < result[1].length; i++) {
@@ -214,7 +213,6 @@
 
             $scope.indicator = [];
             var url = baseUrl + topicOrSourceId + "/indicator?per_page=20000&" + $scope.prefix;
-
             $http.jsonp(url)
                 .success(function (result) {
                     for (i = 0; i < result[1].length; i++) {
@@ -343,7 +341,7 @@
                     console.log(result);
                 });
         };
-        
+
         $scope.getCountries();
         $scope.getSources();
         $scope.getTopics();

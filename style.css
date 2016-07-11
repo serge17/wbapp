@@ -1,37 +1,42 @@
-svg{
+svg {
     height: 400px;
-    width:match-parent;
+    width: match-parent;
 }
-.dropdown-menu{
+
+.dropdown-menu {
     max-height: 400px;
     overflow: hidden;
     overflow-y: auto;
 }
-.dropdown{
-    float:right;
+
+.dropdown {
+    float: right;
 }
 
-.tableContainer{
-    max-height:500px;
-    overflow:auto;
+.tableContainer {
+    max-height: 500px;
+    overflow: auto;
 }
-.container{
-    width:90%;
+
+.container {
+    width: 90%;
 }
 
 body {
     font-family: "Lato", sans-serif;
 }
-.dropdn{
-    display:inline;
+
+.dropdn {
+    display: inline;
 }
-.inp{
+
+.inp {
     margin-top: 10px;
 }
 
 .sidenav {
     height: 100%;
-    width:0;
+    width: 0;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -41,8 +46,8 @@ body {
     transition: 0.5s;
     padding-top: 60px;
     border-right-width: 1px;
-    border-right-style:solid;
-    border-right-color:#e8e8e8;
+    border-right-style: solid;
+    border-right-color: #e8e8e8;
 }
 
 .closebtn {
@@ -59,13 +64,15 @@ body {
 }
 
 @media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
+    .sidenav {
+        padding-top: 15px;
+    }
 }
 
 #container {
-    height: 500px; 
-    width: 100%; 
-    margin: 0 auto; 
+    height: 500px;
+    width: 100%;
+    margin: 0 auto;
 }
 
 .highcharts-tooltip>span {
@@ -83,33 +90,36 @@ body {
 .f32 .flag {
     vertical-align: middle !important;
 }
-#refreshDataBtn{
-    margin-top:5px;
-    margin-left:50px;
+
+#refreshDataBtn {
+    margin-top: 5px;
+    margin-left: 50px;
 }
 
-.inputSelector{
-    width:300px;
-    padding-left:20px;
+.inputSelector {
+    width: 300px;
+    padding-left: 20px;
     max-height: 200px;
-    max-width:400px;
+    max-width: 400px;
     overflow-x: hidden;
 }
 
-.subMenu{
-    margin-left:20px;
+.subMenu {
+    margin-left: 20px;
 }
-.checkbox{
+
+.checkbox {
     margin-bottom: 5px;
     margin-top: 0px;
 }
 
-.menuHead{
+.menuHead {
     margin-top: 20px;
     padding-left: 10px;
     padding-right: 20px;
     width: 300px;
 }
-a{
+
+a {
     text-decoration: none !important;
 }

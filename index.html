@@ -190,8 +190,7 @@
 
         </div>
 
-        <button id="refreshDataBtn" class="btn btn-default" type="button" ng-click="getData(fromDate,toDate);">Load/Refresh Data</button>
-
+        <button id="refreshDataBtn" class="btn btn-default" ng-disabled="selectedIndicatorId==null" type="button" ng-click="getData(fromDate,toDate);">Load/Refresh Data</button>
     </div>
     <script>
         function openNav() {
